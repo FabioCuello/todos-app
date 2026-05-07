@@ -10,6 +10,9 @@ type TaskFormProps = {
   isSubmitting: boolean;
 };
 
+const TITLE_MAX_LENGTH = 200;
+const DESCRIPTION_MAX_LENGTH = 1000;
+
 export function TaskForm({ onSubmit, isSubmitting }: TaskFormProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -20,6 +23,16 @@ export function TaskForm({ onSubmit, isSubmitting }: TaskFormProps) {
     const trimmedTitle = title.trim();
     if (!trimmedTitle) {
       toast.error("Title is required");
+      return;
+    }
+
+    if (trimmedTitle.length > TITLE_MAX_LENGTH) {
+      toast.error(`Title must be ${TITLE_MAX_LENGTH} characters or less`);
+      return;
+    }
+
+    if (description.trim().length > DESCRIPTION_MAX_LENGTH) {
+      toast.error(`Description must be ${DESCRIPTION_MAX_LENGTH} characters or less`);
       return;
     }
 
@@ -42,15 +55,23 @@ export function TaskForm({ onSubmit, isSubmitting }: TaskFormProps) {
         placeholder="Task title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
+        aria-invalid={title.length > TITLE_MAX_LENGTH}
         required
       />
+      <p className={`text-xs ${title.length > TITLE_MAX_LENGTH ? "text-destructive" : "text-muted-foreground"}`}>
+        {title.length}/{TITLE_MAX_LENGTH}
+      </p>
       <Textarea
         placeholder="Description (optional)"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
+        aria-invalid={description.length > DESCRIPTION_MAX_LENGTH}
         rows={2}
       />
-      <Button type="submit" disabled={isSubmitting} className="self-end">
+      <p className={`text-xs ${description.length > DESCRIPTION_MAX_LENGTH ? "text-destructive" : "text-muted-foreground"}`}>
+        {description.length}/{DESCRIPTION_MAX_LENGTH}
+      </p>
+      <Button type="submit" disabled={isSubmitting || title.length > TITLE_MAX_LENGTH || description.length > DESCRIPTION_MAX_LENGTH} className="self-end">
         <Plus className="size-4" data-icon="inline-start" />
         {isSubmitting ? "Creating..." : "Add Task"}
       </Button>

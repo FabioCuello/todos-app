@@ -23,8 +23,8 @@ const findAllQuerySchema = z.object({
 });
 
 const createBodySchema = z.object({
-  title: z.string(),
-  description: z.string().optional()
+  title: z.string().min(1).max(200),
+  description: z.string().max(1000).optional()
 });
 
 const taskIdParamsSchema = z.object({

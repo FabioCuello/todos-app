@@ -27,6 +27,12 @@ export const useTasks = (filters: TaskFilterParams) => {
     onSuccess: () => queryClient.invalidateQueries(["TASKS"])
   });
 
+  const mutatingTaskIds = new Set(
+    [completeMutation, pendingMutation, deleteMutation]
+      .filter((m) => m.isLoading && m.variables !== undefined)
+      .map((m) => m.variables as number)
+  );
+
   return {
     tasks: data?.tasks ?? [],
     total: data?.total ?? 0,
@@ -35,6 +41,7 @@ export const useTasks = (filters: TaskFilterParams) => {
     completeTask: (taskId: number) => completeMutation.mutate(taskId),
     markPending: (taskId: number) => pendingMutation.mutate(taskId),
     deleteTask: (taskId: number) => deleteMutation.mutate(taskId),
-    isCreating: createMutation.isLoading
+    isCreating: createMutation.isLoading,
+    mutatingTaskIds
   };
 };

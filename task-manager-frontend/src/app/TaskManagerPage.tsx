@@ -16,7 +16,7 @@ export function TaskManagerPage() {
     offset: 0
   });
 
-  const { tasks, total, isLoading, createTask, completeTask, markPending, deleteTask, isCreating } =
+  const { tasks, total, isLoading, createTask, completeTask, markPending, deleteTask, isCreating, mutatingTaskIds } =
     useTasks(filters);
 
   const currentPage = Math.floor(filters.offset / filters.limit) + 1;
@@ -39,7 +39,7 @@ export function TaskManagerPage() {
       <div className="flex flex-col gap-6">
         <TaskForm onSubmit={createTask} isSubmitting={isCreating} />
         <TaskFilters filters={filters} onFiltersChange={handleFiltersChange} />
-        <TaskList tasks={tasks} isLoading={isLoading} onComplete={completeTask} onMarkPending={markPending} onDelete={deleteTask} />
+        <TaskList tasks={tasks} isLoading={isLoading} onComplete={completeTask} onMarkPending={markPending} onDelete={deleteTask} mutatingTaskIds={mutatingTaskIds} />
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
