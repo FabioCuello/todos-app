@@ -10,7 +10,7 @@ test.describe("Task Manager", () => {
 
   test("page loads with title and task list", async ({ page }) => {
     await expect(page.getByPlaceholder("Task title")).toBeVisible();
-    await expect(page.getByPlaceholder("Search tasks...")).toBeVisible();
+    await expect(page.getByPlaceholder("Search by title or description...")).toBeVisible();
     await expect(page.getByRole("button", { name: "All" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Pending" })).toBeVisible();
     await expect(
@@ -31,7 +31,7 @@ test.describe("Task Manager", () => {
     const taskCard = page
       .locator("[data-slot='card']")
       .filter({ hasText: taskTitle });
-    await expect(taskCard).toBeVisible({ timeout: 5000 });
+    await expect(taskCard).toBeVisible();
     await expect(taskCard.getByText(taskDescription)).toBeVisible();
   });
 
@@ -40,7 +40,7 @@ test.describe("Task Manager", () => {
 
     await page.getByPlaceholder("Task title").fill(taskTitle);
     await page.getByRole("button", { name: "Add Task" }).click();
-    await expect(page.getByText(taskTitle)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(taskTitle)).toBeVisible();
 
     const taskCard = page
       .locator("[data-slot='card']")
@@ -49,7 +49,7 @@ test.describe("Task Manager", () => {
       .getByRole("button", { name: /^Complete$/ })
       .click();
 
-    await expect(taskCard.getByText("completed")).toBeVisible({ timeout: 5000 });
+    await expect(taskCard.getByText("completed")).toBeVisible();
   });
 
   test("filter tasks by status", async ({ page }) => {
@@ -58,11 +58,11 @@ test.describe("Task Manager", () => {
 
     await page.getByPlaceholder("Task title").fill(pendingTitle);
     await page.getByRole("button", { name: "Add Task" }).click();
-    await expect(page.getByText(pendingTitle)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(pendingTitle)).toBeVisible();
 
     await page.getByPlaceholder("Task title").fill(completedTitle);
     await page.getByRole("button", { name: "Add Task" }).click();
-    await expect(page.getByText(completedTitle)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(completedTitle)).toBeVisible();
 
     const completedCard = page
       .locator("[data-slot='card']")
@@ -70,20 +70,18 @@ test.describe("Task Manager", () => {
     await completedCard
       .getByRole("button", { name: /^Complete$/ })
       .click();
-    await expect(completedCard.getByText("completed")).toBeVisible({
-      timeout: 5000
-    });
+    await expect(completedCard.getByText("completed")).toBeVisible();
 
     await page.getByRole("button", { name: "Pending" }).click();
-    await expect(page.getByText(pendingTitle)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(pendingTitle)).toBeVisible();
     await expect(page.getByText(completedTitle)).not.toBeVisible();
 
     await page.getByRole("button", { name: "Completed" }).click();
-    await expect(page.getByText(completedTitle)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(completedTitle)).toBeVisible();
     await expect(page.getByText(pendingTitle)).not.toBeVisible();
 
     await page.getByRole("button", { name: "All" }).click();
-    await expect(page.getByText(pendingTitle)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(pendingTitle)).toBeVisible();
     await expect(page.getByText(completedTitle)).toBeVisible();
   });
 
@@ -94,18 +92,18 @@ test.describe("Task Manager", () => {
 
     await page.getByPlaceholder("Task title").fill(searchableTitle);
     await page.getByRole("button", { name: "Add Task" }).click();
-    await expect(page.getByText(searchableTitle)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(searchableTitle)).toBeVisible();
 
     await page.getByPlaceholder("Task title").fill(otherTitle);
     await page.getByRole("button", { name: "Add Task" }).click();
-    await expect(page.getByText(otherTitle)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(otherTitle)).toBeVisible();
 
-    await page.getByPlaceholder("Search tasks...").fill(uniqueWord);
-    await expect(page.getByText(searchableTitle)).toBeVisible({ timeout: 5000 });
+    await page.getByPlaceholder("Search by title or description...").fill(uniqueWord);
+    await expect(page.getByText(searchableTitle)).toBeVisible();
     await expect(page.getByText(otherTitle)).not.toBeVisible();
 
-    await page.getByPlaceholder("Search tasks...").clear();
-    await expect(page.getByText(otherTitle)).toBeVisible({ timeout: 5000 });
+    await page.getByPlaceholder("Search by title or description...").clear();
+    await expect(page.getByText(otherTitle)).toBeVisible();
   });
 
   test("form clears after successful creation", async ({ page }) => {
@@ -117,7 +115,7 @@ test.describe("Task Manager", () => {
       .fill("Should clear");
     await page.getByRole("button", { name: "Add Task" }).click();
 
-    await expect(page.getByText(taskTitle)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(taskTitle)).toBeVisible();
     await expect(page.getByPlaceholder("Task title")).toHaveValue("");
     await expect(
       page.getByPlaceholder("Description (optional)")
@@ -130,7 +128,7 @@ test.describe("Task Manager", () => {
     await page.getByPlaceholder("Task title").fill(taskTitle);
     await page.getByRole("button", { name: "Add Task" }).click();
 
-    await expect(page.getByText("Task created")).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText("Task created")).toBeVisible();
   });
 
   test("search by description", async ({ page }) => {
@@ -142,31 +140,31 @@ test.describe("Task Manager", () => {
       .getByPlaceholder("Description (optional)")
       .fill(uniqueDesc);
     await page.getByRole("button", { name: "Add Task" }).click();
-    await expect(page.getByText(taskTitle)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(taskTitle)).toBeVisible();
 
-    await page.getByPlaceholder("Search tasks...").fill(uniqueDesc);
-    await expect(page.getByText(taskTitle)).toBeVisible({ timeout: 5000 });
+    await page.getByPlaceholder("Search by title or description...").fill(uniqueDesc);
+    await expect(page.getByText(taskTitle)).toBeVisible();
   });
 
   test("pagination controls appear and work", async ({ page }) => {
     const prefix = `pagtest${Date.now()}`;
 
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 6; i++) {
       await page.getByPlaceholder("Task title").fill(`${prefix} task ${i}`);
       await page.getByRole("button", { name: "Add Task" }).click();
       await expect(
         page.getByText(`${prefix} task ${i}`).first()
-      ).toBeVisible({ timeout: 5000 });
+      ).toBeVisible();
     }
 
-    await page.getByPlaceholder("Search tasks...").fill(prefix);
-    await expect(page.getByText("Page 1 of 2")).toBeVisible({ timeout: 5000 });
+    await page.getByPlaceholder("Search by title or description...").fill(prefix);
+    await expect(page.getByText("Page 1 of 2")).toBeVisible();
 
     await page.getByRole("button", { name: "Next" }).click();
-    await expect(page.getByText("Page 2 of 2")).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText("Page 2 of 2")).toBeVisible();
 
     await page.getByRole("button", { name: "Previous" }).click();
-    await expect(page.getByText("Page 1 of 2")).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText("Page 1 of 2")).toBeVisible();
   });
 
   test("undo a completed task back to pending", async ({ page }) => {
@@ -174,17 +172,17 @@ test.describe("Task Manager", () => {
 
     await page.getByPlaceholder("Task title").fill(taskTitle);
     await page.getByRole("button", { name: "Add Task" }).click();
-    await expect(page.getByText(taskTitle)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(taskTitle)).toBeVisible();
 
     const taskCard = page
       .locator("[data-slot='card']")
       .filter({ hasText: taskTitle });
 
     await taskCard.getByRole("button", { name: /^Complete$/ }).click();
-    await expect(taskCard.getByText("completed")).toBeVisible({ timeout: 5000 });
+    await expect(taskCard.getByText("completed")).toBeVisible();
 
     await taskCard.getByRole("button", { name: "Undo" }).click();
-    await expect(taskCard.getByText("pending")).toBeVisible({ timeout: 5000 });
+    await expect(taskCard.getByText("pending")).toBeVisible();
     await expect(taskCard.getByRole("button", { name: /^Complete$/ })).toBeVisible();
   });
 
@@ -193,7 +191,7 @@ test.describe("Task Manager", () => {
 
     await page.getByPlaceholder("Task title").fill(taskTitle);
     await page.getByRole("button", { name: "Add Task" }).click();
-    await expect(page.getByText(taskTitle)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(taskTitle)).toBeVisible();
 
     const taskCard = page
       .locator("[data-slot='card']")
@@ -208,14 +206,14 @@ test.describe("Task Manager", () => {
 
     await page.getByPlaceholder("Task title").fill(taskTitle);
     await page.getByRole("button", { name: "Add Task" }).click();
-    await expect(page.getByText(taskTitle)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(taskTitle)).toBeVisible();
 
     const taskCard = page
       .locator("[data-slot='card']")
       .filter({ hasText: taskTitle });
 
     await taskCard.getByRole("button", { name: /^Complete$/ }).click();
-    await expect(taskCard.getByText("completed")).toBeVisible({ timeout: 5000 });
+    await expect(taskCard.getByText("completed")).toBeVisible();
 
     await taskCard.getByRole("button", { name: "Delete" }).click();
     await expect(page.getByText(taskTitle)).not.toBeVisible();
@@ -226,7 +224,7 @@ test.describe("Task Manager", () => {
 
     await page.getByPlaceholder("Task title").fill(taskTitle);
     await page.getByRole("button", { name: "Add Task" }).click();
-    await expect(page.getByText(taskTitle)).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(taskTitle)).toBeVisible();
 
     const taskCard = page
       .locator("[data-slot='card']")
