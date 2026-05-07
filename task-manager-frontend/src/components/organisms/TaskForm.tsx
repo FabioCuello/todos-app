@@ -26,16 +26,6 @@ export function TaskForm({ onSubmit, isSubmitting }: TaskFormProps) {
       return;
     }
 
-    if (trimmedTitle.length > TITLE_MAX_LENGTH) {
-      toast.error(`Title must be ${TITLE_MAX_LENGTH} characters or less`);
-      return;
-    }
-
-    if (description.trim().length > DESCRIPTION_MAX_LENGTH) {
-      toast.error(`Description must be ${DESCRIPTION_MAX_LENGTH} characters or less`);
-      return;
-    }
-
     try {
       await onSubmit({
         title: trimmedTitle,
