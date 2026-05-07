@@ -1,0 +1,44 @@
+services:
+  db-test:
+    image: postgres:16
+    container_name: task-manager-db-test
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: task_manager_test
+    volumes:
+      - ./docker_postgres_init_test.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend-test:
+    container_name: task-manager-backend-test
+    build: ./task-manager-backend
+    environment:
+      APP_PORT: "3001"
+      NODE_ENV: test
+      CORS_ORIGIN: http://localhost:5174
+      PG_CONNECTION_STRING: postgresql://postgres:postgres@db-test:5432/task_manager_test
+    depends_on:
+      db-test:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3001/api/v1/tasks').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  test-runner:
+    container_name: task-manager-test-runner
+    build:
+      context: ./task-manager-frontend
+      dockerfile: Dockerfile.test
+    environment:
+      API_URL: http://backend-test:3001
+      START_SERVER: "true"
+    depends_on:
+      backend-test:
+        condition: service_healthy

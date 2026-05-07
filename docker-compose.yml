@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:16
+    container_name: task-manager-db
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: task_manager
+    volumes:
+      - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    container_name: task-manager-backend
+    build: ./task-manager-backend
+    ports:
+      - "3001:3001"
+    environment:
+      APP_PORT: "3001"
+      NODE_ENV: development
+      CORS_ORIGIN: http://localhost:5173
+      PG_CONNECTION_STRING: postgresql://postgres:postgres@db:5432/task_manager
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    container_name: task-manager-frontend
+    build: ./task-manager-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      API_URL: http://backend:3001
+    depends_on:
+      - backend
