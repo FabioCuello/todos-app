@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS tasks (
 );
 
 CREATE INDEX idx_tasks_status ON tasks (status);
+CREATE INDEX idx_tasks_deleted_at ON tasks (deleted_at);
 
 INSERT INTO tasks (title, description, status) VALUES
   ('Set up project structure', 'Initialize backend and frontend repositories', 'completed'),
