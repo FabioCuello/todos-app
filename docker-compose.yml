@@ -21,6 +21,9 @@ services:
     build: ./task-manager-backend
     ports:
       - "3001:3001"
+    volumes:
+      - ./task-manager-backend:/app
+      - /app/node_modules
     environment:
       APP_PORT: "3001"
       NODE_ENV: development
@@ -35,6 +38,9 @@ services:
     build: ./task-manager-frontend
     ports:
       - "5173:5173"
+    volumes:
+      - ./task-manager-frontend:/app
+      - /app/node_modules
     environment:
       API_URL: http://backend:3001
     depends_on:

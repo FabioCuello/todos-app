@@ -56,7 +56,7 @@ export function TaskList({ tasks, isLoading, onComplete, onMarkPending, onDelete
         return (
           <Card key={task.taskId} size="sm">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 break-all">
                 {task.title}
                 <Badge
                   variant={task.status === "completed" ? "default" : "secondary"}
