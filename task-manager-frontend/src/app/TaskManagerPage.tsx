@@ -6,7 +6,7 @@ import { Pagination } from "@/components/molecules/Pagination";
 import { useTasks } from "@/hooks/useTasks";
 import type { TaskFilterParams } from "@/types/task";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 5;
 
 export function TaskManagerPage() {
   const [filters, setFilters] = useState<TaskFilterParams>({
