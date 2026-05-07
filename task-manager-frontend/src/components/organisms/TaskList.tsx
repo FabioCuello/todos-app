@@ -70,7 +70,7 @@ export function TaskList({ tasks, isLoading, onComplete, onMarkPending, onDelete
                 </Badge>
               </CardTitle>
               {task.description && (
-                <CardDescription>{task.description}</CardDescription>
+                <CardDescription className="break-all">{task.description}</CardDescription>
               )}
               <CardAction>
                 <div className="flex gap-1">
